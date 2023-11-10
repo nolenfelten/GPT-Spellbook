@@ -1,0 +1,186 @@
+**Experiment 1**
+
+.obj file => https://www.models-resource.com/nintendo_64/banjokazooie/model/24221/?source=genre
+image file => https://i.imgur.com/MTDoCli.png
+User: 
+Render the .obj as an image. The image attached is an example
+
+
+ChatGPT:
+It appears you have uploaded an .obj file and an image file, and you are requesting the .obj file to be rendered as an image. 
+To assist with that, I will need to use the Python tool to read the .obj file and produce a rendered image. Let's proceed with that now.
+
+from mpl_toolkits.mplot3d.art3d import Poly3DCollection
+
+# Attempt to render the .obj file again with the correct import
+
+# Create a new figure and a 3D subplot
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+
+# Extract the x, y, z coordinates of vertices
+x = vertices[:, 0]
+y = vertices[:, 1]
+z = vertices[:, 2]
+
+# Plot the vertices
+ax.scatter(x, y, z)
+
+# Plot the faces
+for face in faces:
+    face_vertices = vertices[face - 1]  # .obj files are 1-indexed
+    ax.add_collection3d(Poly3DCollection([face_vertices], facecolors='cyan', linewidths=1, edgecolors='r', alpha=.25))
+
+# Set plot display parameters
+ax.set_xlabel('X axis')
+ax.set_ylabel('Y axis')
+ax.set_zlabel('Z axis')
+plt.tight_layout()
+
+# Save the plot to a file
+rendered_image_path = '/mnt/data/rendered_image.png'
+plt.savefig(rendered_image_path)
+plt.close()
+
+# Return the path of the saved image
+rendered_image_path
+
+The .obj file has been successfully rendered as an image. You can download the rendered image from the link below:
+https://i.imgur.com/KQlbaeQ.png
+
+
+
+**Experiment 2**
+.obj file => https://www.models-resource.com/nintendo_64/banjokazooie/model/12319/?source=genre
+image file => https://i.imgur.com/3ts7lbB.png
+User:
+Repeat the process for the obj file attached.
+
+ChatGPT:
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d.art3d import Poly3DCollection
+import numpy as np
+
+# Read the .obj file which includes vertices and faces
+def read_obj_with_mtl(obj_file_path, mtl_file_path):
+    # Initialize containers for vertex, normal, and texture coordinates
+    vertices = []
+    normals = []
+    texcoords = []
+    faces = []
+
+    material = None
+    mtl = None
+
+    # Read the material file to link the material with the .obj
+    if mtl_file_path:
+        mtl = {}
+        with open(mtl_file_path, 'r') as f:
+            for line in f:
+                if line.startswith('newmtl'):
+                    material = line.split()[1]
+                if line.startswith('map_Kd'):
+                    # Assumes that the texture file is in the same path as the .mtl file
+                    mtl[material] = line.split()[1]
+
+    # Read the .obj file
+    with open(obj_file_path, 'r') as file:
+        for line in file:
+            if line.startswith('v '):  # This line indicates a vertex
+                vertices.append(list(map(float, line.strip().split()[1:4])))
+            elif line.startswith('vt '):  # Texture coordinates
+                texcoords.append(list(map(float, line.strip().split()[1:3])))
+            elif line.startswith('vn '):  # Normal vectors
+                normals.append(list(map(float, line.strip().split()[1:4])))
+            elif line.startswith('f '):  # This line indicates a face
+                face = []
+                texture = []
+                norm = []
+                for vert in line.strip().split()[1:]:
+                    w = vert.split('/')
+                    face.append(int(w[0]))
+                    if len(w) >= 2 and len(w[1]) > 0:
+                        texture.append(int(w[1]))
+                    else:
+                        texture.append(0)
+                    if len(w) >= 3 and len(w[2]) > 0:
+                        norm.append(int(w[2]))
+                    else:
+                        norm.append(0)
+                faces.append((face, texture, norm, material))
+
+    return np.array(vertices), np.array(normals), np.array(texcoords), faces, mtl
+
+# Paths to the .obj and .mtl files
+obj_file_path = '/mnt/data/Jiggy.obj'
+mtl_file_path = '/mnt/data/Jiggy.mtl'
+
+# Read the .obj file
+vertices, normals, texcoords, faces, mtl = read_obj_with_mtl(obj_file_path, mtl_file_path)
+
+# Create a new figure and a 3D subplot
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+
+# Plot the vertices
+ax.scatter(vertices[:, 0], vertices[:, 1], vertices[:, 2])
+
+# Plot the faces
+for face_info in faces:
+    face_vertices = vertices[np.array(face_info[0]) - 1]
+    ax.add_collection3d(Poly3DCollection([face_vertices], facecolors='gold', linewidths=1, edgecolors='r', alpha=.25))
+
+# Set plot display parameters
+ax.set_xlabel('X axis')
+ax.set_ylabel('Y axis')
+ax.set_zlabel('Z axis')
+plt.tight_layout()
+
+# Save the plot to a file
+rendered_image_path_with_mtl = '/mnt/data/rendered_image_with_mtl.png'
+plt.savefig(rendered_image_path_with_mtl)
+plt.close()
+
+# Return the path of the saved image
+rendered_image_path_with_mtl
+
+Image 1 => https://i.imgur.com/6tMy3Et.png
+
+User:
+position the camera to birds eye view
+
+ChatGPT:
+
+# To create a bird's eye view, the camera (viewpoint) needs to be above the object looking directly down.
+# We will reposition the camera for the bird's eye view rendering.
+
+# Create a new figure and a 3D subplot
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+
+# Plot the vertices
+ax.scatter(vertices[:, 0], vertices[:, 1], vertices[:, 2])
+
+# Plot the faces
+for face_info in faces:
+    face_vertices = vertices[np.array(face_info[0]) - 1]
+    ax.add_collection3d(Poly3DCollection([face_vertices], facecolors='gold', linewidths=1, edgecolors='r', alpha=.25))
+
+# Set the elevation and azimuth for bird's eye view (90 degrees elevation)
+ax.view_init(elev=90., azim=0)
+
+# Set plot display parameters
+ax.set_xlabel('X axis')
+ax.set_ylabel('Y axis')
+ax.set_zlabel('Z axis')
+plt.tight_layout()
+
+# Save the plot to a file
+birdseye_image_path = '/mnt/data/birdseye_rendered_image.png'
+plt.savefig(birdseye_image_path)
+plt.close()
+
+# Return the path of the saved image
+birdseye_image_path
+
+Resulting image => https://i.imgur.com/nfiNFhr.png
