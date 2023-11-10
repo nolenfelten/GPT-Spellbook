@@ -184,3 +184,6 @@ plt.close()
 birdseye_image_path
 
 Resulting image => https://i.imgur.com/nfiNFhr.png
+
+I bet this can be used to write a dalle 3 prompt that would give a consistent object location in generated images.
+TODO: Create scene that 2 obj's and camera will be rendered in. position obj's and camera using XYZ. Generate DALLE 3 prompt/image.
