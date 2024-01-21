@@ -1,0 +1,20 @@
+Say you are a school teacher, and you need to create an assignment for the class real fast.
+
+Here is what you do:
+  1. Find Youtube Video. 
+    Example: https://www.youtube.com/watch?v=Kk5m-T8_hVU
+  
+  2. Summarize it with an online service.
+    I like to use: https://summarize.tech 
+    You can use whatever you want, I like this one because all I need to do is add the youtube link to the end.
+    Example: https://summarize.tech/https://www.youtube.com/watch?v=Kk5m-T8_hVU
+
+  3. Prompt ChatGPT to create the assignment.
+    Example:
+      "Use your browser to open this page and create a 10 question quiz in the format of Who Wants to be a Millionaire. 
+      The first question is easy, and each one after is progressively harder, with the last question being the most difficult.
+      Write the output in nearly formatted HTML to be printed on to one page of paper.
+      At the bottom, on a seperate document, provide the anweser key.
+      https://summarize.tech/https://www.youtube.com/watch?v=Kk5m-T8_hVU" 
+
+  4. Give the assignment out to the class, take a nap in the teachers lounge, and try to get through the day with your hangover.
